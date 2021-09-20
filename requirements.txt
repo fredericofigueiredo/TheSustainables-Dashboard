@@ -3,3 +3,4 @@ geopy==2.2.0
 pandas==1.1.3
 numpy==1.19.2
 deep_translator
+xlrd >= 1.0.0
