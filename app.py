@@ -25,7 +25,7 @@ from collections import Counter
 
 
 #LAYOUT
-st.set_page_config(layout="wide")
+#st.set_page_config(layout="wide")
 
 col1, col2, col3 = st.columns(3)
 
@@ -64,7 +64,22 @@ else:
     if shopify_upload is not None:
         shopify_df = pd.read_csv(shopify_upload)
     else:
-        shopify_df = pd.DataFrame(data=None)
+        shopify_df = pd.DataFrame(data=None, columns = ["Order ID",
+                           "Channel",
+                           "Order Date",
+                           "City",
+                           "Country",
+                           "Product Name",
+                           "SKU",
+                           "Quantity",
+                           "Wholesale Price",
+                           "Gross Sales",
+                           "Discounts",
+                           "Net Sales",
+                           "Sales",
+                           "Returns",
+                           "Shipping",
+                           "Taxes"])
         
         
         
@@ -76,18 +91,48 @@ else:
     if ankorstore_upload is not None:
         ankorstore_df = pd.read_csv(ankorstore_upload)
     else:
-        ankorstore_df = pd.DataFrame(data=None)
+        ankorstore_df = pd.DataFrame(data=None, columns = ["Order ID",
+                           "Channel",
+                           "Order Date",
+                           "City",
+                           "Country",
+                           "Product Name",
+                           "SKU",
+                           "Quantity",
+                           "Wholesale Price",
+                           "Gross Sales",
+                           "Discounts",
+                           "Net Sales",
+                           "Sales",
+                           "Returns",
+                           "Shipping",
+                           "Taxes"])
     
     
     
-    avocadostore_upload = st.file_uploader("Upload Avocado store XLSX",
+    avocadostore_upload = st.file_uploader("Upload Avocado store Excel",
                                    type = 'xlsx',
                                    accept_multiple_files = False)
     
     if avocadostore_upload is not None:
         avocadostore_df = pd.read_excel(avocadostore_upload)
     else:
-        avocadostore_df = pd.DataFrame(data=None)
+        avocadostore_df = pd.DataFrame(data=None, columns = ["Order ID",
+                           "Channel",
+                           "Order Date",
+                           "City",
+                           "Country",
+                           "Product Name",
+                           "SKU",
+                           "Quantity",
+                           "Wholesale Price",
+                           "Gross Sales",
+                           "Discounts",
+                           "Net Sales",
+                           "Sales",
+                           "Returns",
+                           "Shipping",
+                           "Taxes"])
         
         
         
@@ -98,16 +143,54 @@ else:
     
     if shopify_visits is not None:
         visits_df = pd.read_csv(shopify_visits)
-    else:
-        visits_df = pd.DataFrame(data=None)
+#    else:
+#        visits_df = pd.DataFrame(data=None, columns = ['day',
+#                                                       'ua_browser_version',
+#                                                       'ua_browser',
+#                                                       'ua_form_factor',
+#                                                       'ua_os_version',
+#                                                       'ua_os',
+#                                                       'page_path',
+#                                                       'page_resource_id',
+#                                                       'page_type',
+#                                                       'page_url',
+#                                                       'location_city',
+#                                                       'location_region',
+#                                                       'location_country',
+#                                                       'marketing_event_target',
+#                                                       'marketing_event_type',
+#                                                       'utm_campaign_content',
+#                                                       'utm_campaign_medium',
+#                                                       'utm_campaign_name',
+#                                                       'utm_campaign_source',
+#                                                       'utm_campaign_term',
+#                                                       'referrer_host',
+#                                                       'referrer_name',
+#                                                       'referrer_path',
+#                                                       'referrer_source',
+#                                                       'referrer_terms',
+#                                                       'referrer_url',
+#                                                       'total_sessions',
+#                                                       'total_carts',
+#                                                       'total_checkouts',
+#                                                       'total_orders_placed',
+#                                                       'total_conversion',
+#                                                       'avg_duration',
+#                                                       'total_bounce_rate',
+#                                                       'total_pageviews',
+#                                                       'total_visitors'])
         
         
     
     shopify = shopify_df
     ankorstore = ankorstore_df
     avocado = avocadostore_df
-    visits_full = visits_df
     
+    
+    if shopify_visits is not None:
+        visits_full = visits_df
+    else:
+        visits_full=None
     
         
     #ankorstore = pd.read_csv("G:/My Drive/Fred/4. Education/Ramon Llull University, ESADE/Academic/Courses/Final project/The Sustainables/Ankorstore Data - Sales.csv")
@@ -209,13 +292,13 @@ else:
     
     
     
-    if shopify_upload is not None and ankorstore_upload is not None and avocadostore_upload is not None and shopify_visits is not None:
+    #if shopify_upload is not None and ankorstore_upload is not None and avocadostore_upload is not None and shopify_visits is not None:
     
     
         #------------------------------------------------------SHOPIFY------------------------------------------------------
         
         
-        
+    if shopify_upload is not None:
         shopify.drop(columns=["Sale ID",
                               "Order",
                               "Transaction type",
@@ -283,8 +366,8 @@ else:
         
         
         
-        
         #------------------------------------------------------ANKORSTORE------------------------------------------------------
+    if ankorstore_upload is not None:
         ankorstore.drop(columns=["Retailer Name",
                                  "Address",
                                  "Zip Code",
@@ -347,6 +430,7 @@ else:
         
         
         #------------------------------------------------------AVOCADO STORE------------------------------------------------------
+    if avocadostore_upload is not None:
         avocado.drop(columns = ["eingegangen",
                                 "Gesamtbetrag",
                                 "Kunde_Name",
@@ -426,102 +510,106 @@ else:
         
         
         
-        
-        
-        
-        #---------------------------------------------Joining standardized data sources in one dataframe-----------------------------------------------------
-        
-        Orders = pd.concat([ankorstore, shopify, avocado])
-        
-        Orders.sort_values('Order Date', inplace=True)
-        
-        Orders.reset_index(inplace=True, drop=True)
-        
-        
-        
-        #Creating product kind dummy variables to count units sold
-    #    Orders['mirage']=0
-    #    Orders['save the wildlife']=0
-    #    Orders['save the plants']=0
-    #    Orders['cloudcastle']=0
-    #    Orders['granito']=0
-    #    Orders['an apple a day']=0
-    #    Orders['save the gardens']=0
-    #    Orders['save the jungle']=0
-        
-        
-    #    def get_prod_var(df):
-    #        numbers = []
-    #        
-    #        for items in df['SKU']:
-    #            numbers.append(len(items))
-    #            
-    #        df['Number Designs'] = numbers
-    #        
-    #        return "Done!"
-    #            
-    #    get_prod_var(Orders)
-        
-        
-        
-        #Getting quantities
-        
-        def get_quantity(df):
-            total=[]    
-            for i, row in df.iterrows():
-                if row['Channel']=="Shopify":
-                    if "Big Steps" in row['Product Name']:
-                        total.append(row['SKU'][0])
-                        total.append(row['SKU'][1])
-                    if "Three Of A Kind" in row['Product Name']:
-                        total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0]])                
-                    elif len(row['SKU'])==1:
-                        total.append(row['SKU'][0])
-                if row['Channel']=="Ankorstore":
-                    if "Set of 3" in row['Product Name']:
-                        total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0]])
-                    elif len(row['SKU'])==1:
-                        total.append(row['SKU'][0])
-                if row['Channel']=="Avocadostore":
-                    if "1 x 3er" in row['Product Name']:
-                        total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0]])
-                    if "2 x 3er" in row['Product Name']:
-                        if len(row['SKU'])==1:
-                            total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0]])
-                        else:
-                            total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][1],row['SKU'][1],row['SKU'][1]])
-                    if "3 x 3er" in row['Product Name']:
-                        if len(row['SKU'])==1:
-                            total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0]])
-                        elif len(row['SKU'])==2:
-                            total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][1],row['SKU'][1],row['SKU'][1]])
-                        elif len(row['SKU'])==3:
-                            total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][2],row['SKU'][2],row['SKU'][2],row['SKU'][1],row['SKU'][1],row['SKU'][1]])
+         
+    
+    #---------------------------------------------Joining standardized data sources in one dataframe-----------------------------------------------------
+    
+    Orders = pd.concat([ankorstore, shopify, avocado])
+    
+    Orders.sort_values('Order Date', inplace=True)
+    
+    Orders.reset_index(inplace=True, drop=True)
+    
+    
+    
+    #Creating product kind dummy variables to count units sold
+#    Orders['mirage']=0
+#    Orders['save the wildlife']=0
+#    Orders['save the plants']=0
+#    Orders['cloudcastle']=0
+#    Orders['granito']=0
+#    Orders['an apple a day']=0
+#    Orders['save the gardens']=0
+#    Orders['save the jungle']=0
+    
+    
+#    def get_prod_var(df):
+#        numbers = []
+#        
+#        for items in df['SKU']:
+#            numbers.append(len(items))
+#            
+#        df['Number Designs'] = numbers
+#        
+#        return "Done!"
+#            
+#    get_prod_var(Orders)
+    
+    
+    
+    #Getting quantities
+    
+    def get_quantity(df):
+        total=[]    
+        for i, row in df.iterrows():
+            if row['Channel']=="Shopify":
+                if "Big Steps" in row['Product Name']:
+                    total.append(row['SKU'][0])
+                    total.append(row['SKU'][1])
+                if "Three Of A Kind" in row['Product Name']:
+                    total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0]])                
+                elif len(row['SKU'])==1:
+                    total.append(row['SKU'][0])
+            if row['Channel']=="Ankorstore":
+                if "Set of 3" in row['Product Name']:
+                    total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0]])
+                elif len(row['SKU'])==1:
+                    total.append(row['SKU'][0])
+            if row['Channel']=="Avocadostore":
+                if "1 x 3er" in row['Product Name']:
+                    total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0]])
+                if "2 x 3er" in row['Product Name']:
+                    if len(row['SKU'])==1:
+                        total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0]])
+                    else:
+                        total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][1],row['SKU'][1],row['SKU'][1]])
+                if "3 x 3er" in row['Product Name']:
+                    if len(row['SKU'])==1:
+                        total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0]])
+                    elif len(row['SKU'])==2:
+                        total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][1],row['SKU'][1],row['SKU'][1]])
+                    elif len(row['SKU'])==3:
+                        total.extend([row['SKU'][0],row['SKU'][0],row['SKU'][0],row['SKU'][2],row['SKU'][2],row['SKU'][2],row['SKU'][1],row['SKU'][1],row['SKU'][1]])
+                    
+        return(total)
                         
-            return(total)
-                            
-                            
-        get_quantity(Orders)            
-        
-        
-        prod_dict=Counter(get_quantity(Orders))
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        #DATA IMPORT
-        data_full = Orders
-        
-        #visits_full = pd.read_csv('G:/My Drive/Fred/4. Education/Ramon Llull University, ESADE/Academic/Courses/Final project/The Sustainables/Shopify Data - Visits.csv')
-        
+                        
+    get_quantity(Orders)            
+    
+    
+    prod_dict=Counter(get_quantity(Orders))
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    #DATA IMPORT
+    data_full = Orders
+    
+    #visits_full = pd.read_csv('G:/My Drive/Fred/4. Education/Ramon Llull University, ESADE/Academic/Courses/Final project/The Sustainables/Shopify Data - Visits.csv')
+    
+    
+    
+    
+    if shopify_upload is not None or ankorstore_upload is not None or avocadostore_upload is not None:
+    
         
         #DATA STANDARDIZATION FOR DATA FULL
         data_full['Order ID'] = data_full['Order ID'].apply(str)
@@ -559,37 +647,42 @@ else:
         min_order_date =  dates_orders.min()
         max_order_date = dates_orders.max()
         
-        dates_visits = pd.to_datetime(visits_full["day"]).dt.date
-        min_visit_date = dates_visits.min()
-        max_visit_date = dates_visits.max()
-        
-        visits_full["day"]=dates_visits
-        
-        
-        if min_order_date < min_visit_date:
-            min_date = min_order_date
-        else:
-            min_date = min_visit_date
+        if visits_full is not None:
+            dates_visits = pd.to_datetime(visits_full["day"]).dt.date
+            min_visit_date = dates_visits.min()
+            max_visit_date = dates_visits.max()
+            
+            
+            visits_full["day"]=dates_visits
+            
+            
+            if min_order_date < min_visit_date:
+                min_date = min_order_date
+            else:
+                min_date = min_visit_date
             
         
-        if max_order_date < max_visit_date:
-            max_date = max_visit_date
-        else:
-            max_date = max_order_date
-        
-        
-        
-        
-        visit_country = visits_full['location_country']
-        
-        for i, visit in enumerate(visit_country):
-            if visit is None:
-                visit_country[i]=str("")
+            if max_order_date < max_visit_date:
+                max_date = max_visit_date
             else:
-                visit_country[i]=str(visit)
+                max_date = max_order_date
+        else:
+            max_date=max_order_date
+            min_date=min_order_date
+            
         
-        visits_full['location_country'] = visit_country
-        
+        if visits_full is not None:
+            
+            visit_country = visits_full['location_country']
+            
+            for i, visit in enumerate(visit_country):
+                if visit is None:
+                    visit_country[i]=str("")
+                else:
+                    visit_country[i]=str(visit)
+            
+            visits_full['location_country'] = visit_country
+            
         
         
         prods = ['mirage',
@@ -623,19 +716,23 @@ else:
         
         try:
             selected_data = data[data['Order Date'] <= date_sample[1]]
-            selected_visits = visits_full[visits_full['day'] <= date_sample[1]]
+            if visits_full is not None:
+                selected_visits = visits_full[visits_full['day'] <= date_sample[1]]
             max_date = date_sample[1]
         except:
             selected_data = data[data['Order Date'] <= max_date]
-            selected_visits = visits_full[visits_full['day'] <= max_date]
+            if visits_full is not None:
+                selected_visits = visits_full[visits_full['day'] <= max_date]
             
         try:
             selected_data = selected_data[selected_data['Order Date'] >= date_sample[0]]
-            selected_visits = selected_visits[selected_visits['day'] >= date_sample[0]]
+            if visits_full is not None:
+                selected_visits = selected_visits[selected_visits['day'] >= date_sample[0]]
             min_date = date_sample[0]
         except:
             selected_data = selected_data[selected_data['Order Date'] >= min_date]
-            selected_visits = selected_visits[selected_visits['day'] >= min_date]
+            if visits_full is not None:
+                selected_visits = selected_visits[selected_visits['day'] >= min_date]
                     
     
     #LAYOUT    
@@ -670,31 +767,36 @@ else:
              key = "gfilter2")
         
         #select Country
-        country_list = visits_full['location_country'].unique()
+        if visits_full is not None:
+            country_list = visits_full['location_country'].unique()
+        else:
+            country_list = Orders['Country'].unique()
         country_list = np.insert(country_list,0, np.array(""))
         gfilter3 = st.sidebar.selectbox(
-            'Select Country',
-             country_list,
-             key = "gfilter3")
-        
+                'Select Country',
+                 country_list,
+                 key = "gfilter3")
+            
         #Select Browser
-        browser_list = visits_full['ua_browser'].unique()
-        browser_list = np.insert(browser_list, 0, np.array(""))
-        gfilter4 = st.sidebar.selectbox(
-            'Select Browser',
-            browser_list,
-            key = 'gfilter4'
-            )
-        
+        if visits_full is not None:
+            browser_list = visits_full['ua_browser'].unique()
+            browser_list = np.insert(browser_list, 0, np.array(""))
+            gfilter4 = st.sidebar.selectbox(
+                'Select Browser',
+                browser_list,
+                key = 'gfilter4'
+                )
+            
         #Select Device
-        device_list = visits_full['ua_os'].unique()
-        device_list = np.insert(device_list, 0, np.array(""))
-        gfilter5 = st.sidebar.selectbox(
-            'Select Device',
-            device_list,
-            key = 'gfilter5'
-            )
-        
+        if visits_full is not None:
+            device_list = visits_full['ua_os'].unique()
+            device_list = np.insert(device_list, 0, np.array(""))
+            gfilter5 = st.sidebar.selectbox(
+                'Select Device',
+                device_list,
+                key = 'gfilter5'
+                )
+            
         #Select Promotion/Non-promotion
         
         
@@ -727,33 +829,33 @@ else:
         if ordergraphfilter=="No":
             graph_data = selected_data
          
-        
-        visitsstats_data = selected_visits
-        
-        if gfilter3 is not None:
-            visitsstats_data = visitsstats_data[visitsstats_data['location_country'].str.contains(gfilter3)]
-        if gfilter4 is not None:
-            visitsstats_data = visitsstats_data[visitsstats_data['ua_browser'].str.contains(gfilter4)]
-        if gfilter5 is not None:
-            visitsstats_data = visitsstats_data[visitsstats_data['ua_os'].str.contains(gfilter5)]
-        
-        if visitstatsfilter=="No":
+        if visits_full is not None:
             visitsstats_data = selected_visits
             
-        
+            if gfilter3 is not None:
+                visitsstats_data = visitsstats_data[visitsstats_data['location_country'].str.contains(gfilter3)]
+            if gfilter4 is not None:
+                visitsstats_data = visitsstats_data[visitsstats_data['ua_browser'].str.contains(gfilter4)]
+            if gfilter5 is not None:
+                visitsstats_data = visitsstats_data[visitsstats_data['ua_os'].str.contains(gfilter5)]
             
-        visitsgraph_data = selected_visits
-        
-        if gfilter3 is not None:
-            visitsgraph_data = visitsgraph_data[visitsgraph_data['location_country'].str.contains(gfilter3)]
-        if gfilter4 is not None:
-            visitsgraph_data = visitsgraph_data[visitsgraph_data['ua_browser'].str.contains(gfilter4)]
-        if gfilter5 is not None:
-            visitsgraph_data = visitsgraph_data[visitsgraph_data['ua_os'].str.contains(gfilter5)]
-        
-        if visitgraphfilter=="No":
+            if visitstatsfilter=="No":
+                visitsstats_data = selected_visits
+                
+            
+                
             visitsgraph_data = selected_visits
             
+            if gfilter3 is not None:
+                visitsgraph_data = visitsgraph_data[visitsgraph_data['location_country'].str.contains(gfilter3)]
+            if gfilter4 is not None:
+                visitsgraph_data = visitsgraph_data[visitsgraph_data['ua_browser'].str.contains(gfilter4)]
+            if gfilter5 is not None:
+                visitsgraph_data = visitsgraph_data[visitsgraph_data['ua_os'].str.contains(gfilter5)]
+            
+            if visitgraphfilter=="No":
+                visitsgraph_data = selected_visits
+                
         
         
         
@@ -784,27 +886,28 @@ else:
             
         
         #getting avg visit times
-        
-        visit_times=list(visitsstats_data["avg_duration"])
-        
-        for i,visit in enumerate(visit_times):
-            try:
-                hours = round(float(visit[:visit.index("h")]),0)
-                minutes = round(float(visit[visit.index("h")+1:visit.index("m")]),0)
-                seconds = round(float(visit[visit.index("m")+1:visit.index("s")]),0)
-            except:
+        if visits_full is not None:
+                
+            visit_times=list(visitsstats_data["avg_duration"])
+            
+            for i,visit in enumerate(visit_times):
                 try:
-                    hours = 0
-                    minutes = round(float(visit[:visit.index("m")]),0)
+                    hours = round(float(visit[:visit.index("h")]),0)
+                    minutes = round(float(visit[visit.index("h")+1:visit.index("m")]),0)
                     seconds = round(float(visit[visit.index("m")+1:visit.index("s")]),0)
                 except:
-                    hours = 0
-                    minutes = 0
-                    seconds = round(float(visit[:visit.index("s")]),0)
-            visit_times[i] = int(hours*3600) + int(minutes*60) + int(seconds)
-                    
-        visitsstats_data["avg_duration"]=visit_times
-        
+                    try:
+                        hours = 0
+                        minutes = round(float(visit[:visit.index("m")]),0)
+                        seconds = round(float(visit[visit.index("m")+1:visit.index("s")]),0)
+                    except:
+                        hours = 0
+                        minutes = 0
+                        seconds = round(float(visit[:visit.index("s")]),0)
+                visit_times[i] = int(hours*3600) + int(minutes*60) + int(seconds)
+                        
+            visitsstats_data["avg_duration"]=visit_times
+            
         
         
         
@@ -824,13 +927,17 @@ else:
         #STATS DATA
         total_revenue = stats_data["Sales"].sum()
         n_orders = stats_data["Sales"].count()
-        total_visitors = visitsstats_data["total_visitors"].sum()
-        conversion_rate = visitsstats_data["total_conversion"].sum() / visitsstats_data.shape[0]
+        if visits_full is not None:
+            
+            total_visitors = visitsstats_data["total_visitors"].sum()
+            conversion_rate = visitsstats_data["total_conversion"].sum() / visitsstats_data.shape[0]
         
         n_returns = stats_data['Returns'].sum()
         avg_basket = stats_data['Sales'].mean()
-        avg_duration = visitsstats_data["avg_duration"].mean()
-        avg_pageviews = visitsstats_data["total_pageviews"].mean()
+        if visits_full is not None:
+                
+            avg_duration = visitsstats_data["avg_duration"].mean()
+            avg_pageviews = visitsstats_data["total_pageviews"].mean()
         
         
         
@@ -843,9 +950,10 @@ else:
         
         c2.metric("Number of Orders", str(n_orders))
         
-        c3.metric("Number of Visits", str(total_visitors))
-        
-        c4.metric("Shopify Conversion Rate", str(round(conversion_rate,3)*100)+"%")
+        if visits_full is not None:
+            c3.metric("Number of Visits", str(total_visitors))
+            
+            c4.metric("Shopify Conversion Rate", str(round(conversion_rate,3)*100)+"%")
         
         
         st.write(" ")
@@ -857,9 +965,10 @@ else:
         
         l2c2.metric("Average Basket Size", str(round(avg_basket,2))+"€")
         
-        l2c3.metric("Average Visit Duration", str(round(avg_duration,2))+" sec")
-        
-        l2c4.metric("Average Page Views", str(round(avg_pageviews,2)))
+        if visits_full is not None:
+            l2c3.metric("Average Visit Duration", str(round(avg_duration,2))+" sec")
+            
+            l2c4.metric("Average Page Views", str(round(avg_pageviews,2)))
         
         
         
@@ -902,34 +1011,35 @@ else:
         
         #-------------------------------------------------------------
         
-        #6-Visits over time
-        timeline3 = visitsgraph_data[['day','total_visitors']]
-        df3 = timeline3.groupby('day').sum()
-        timeline3 = timeline3.set_index('day').groupby('day').sum()
-        
-        #7-Conversions over time
-        timeline4 = visitsgraph_data[['day','total_conversion']]
-        df4 = timeline4.groupby('day').sum()
-        timeline4 = timeline4.set_index('day').groupby('day').sum()
-        
-        #8-Browser Conversion
-        browser_conv = visitsgraph_data[['ua_browser', 'total_conversion', 'total_visitors']].groupby('ua_browser').sum()
-        conv_by_browser = pd.DataFrame()
-        conv_by_browser['Conversion (%)'] = browser_conv['total_conversion']/browser_conv['total_visitors']*100
-        conv_by_browser['Total Conversions'] = browser_conv['total_conversion']
-        conv_by_browser = conv_by_browser.sort_values('Conversion (%)',ascending=False).head(10)
-        
-        #9-Device Conversion
-        device_conv = visitsgraph_data[['ua_os', 'total_conversion', 'total_visitors']].groupby('ua_os').sum()
-        conv_by_device = pd.DataFrame()
-        conv_by_device['Conversion (%)'] = device_conv['total_conversion']/device_conv['total_visitors']*100
-        conv_by_device['Total Conversions'] = device_conv['total_conversion']
-        conv_by_device = conv_by_device.sort_values('Conversion (%)',ascending=False)
-        
-        #10-Visits by country
-        country_visits = visitsgraph_data[['location_country','total_visitors','total_conversion']].groupby('location_country').sum().sort_values('total_visitors',ascending=False).head(10)
-        country_visits['Conversion (%)'] = country_visits['total_conversion'] / country_visits['total_visitors']*100
-        #11- Conversion by promotion medium
+        if visits_full is not None:
+            #6-Visits over time
+            timeline3 = visitsgraph_data[['day','total_visitors']]
+            df3 = timeline3.groupby('day').sum()
+            timeline3 = timeline3.set_index('day').groupby('day').sum()
+            
+            #7-Conversions over time
+            timeline4 = visitsgraph_data[['day','total_conversion']]
+            df4 = timeline4.groupby('day').sum()
+            timeline4 = timeline4.set_index('day').groupby('day').sum()
+            
+            #8-Browser Conversion
+            browser_conv = visitsgraph_data[['ua_browser', 'total_conversion', 'total_visitors']].groupby('ua_browser').sum()
+            conv_by_browser = pd.DataFrame()
+            conv_by_browser['Conversion (%)'] = browser_conv['total_conversion']/browser_conv['total_visitors']*100
+            conv_by_browser['Total Conversions'] = browser_conv['total_conversion']
+            conv_by_browser = conv_by_browser.sort_values('Conversion (%)',ascending=False).head(10)
+            
+            #9-Device Conversion
+            device_conv = visitsgraph_data[['ua_os', 'total_conversion', 'total_visitors']].groupby('ua_os').sum()
+            conv_by_device = pd.DataFrame()
+            conv_by_device['Conversion (%)'] = device_conv['total_conversion']/device_conv['total_visitors']*100
+            conv_by_device['Total Conversions'] = device_conv['total_conversion']
+            conv_by_device = conv_by_device.sort_values('Conversion (%)',ascending=False)
+            
+            #10-Visits by country
+            country_visits = visitsgraph_data[['location_country','total_visitors','total_conversion']].groupby('location_country').sum().sort_values('total_visitors',ascending=False).head(10)
+            country_visits['Conversion (%)'] = country_visits['total_conversion'] / country_visits['total_visitors']*100
+            #11- Conversion by promotion medium
         
         
         
@@ -976,38 +1086,38 @@ else:
         
         
         
-        
-        st.title("Visits")
-        
-        #Row 4
-        row4col1, row4col2 = st.columns(2)
-        
-        #6-Visits over time
-        row4col1.header("Visits Timeline")
-        row4col1.line_chart(data=timeline3, width = 500, height =300)
-        
-        #7
-        row4col2.header("Conversions Timeline")
-        row4col2.line_chart(data=timeline4, width = 500, height =300)
-        
-        #Row 5
-        row5col1, row5col2 = st.columns(2)
-        
-        #8-Conversions by browser
-        row5col1.header("Conversions by Browser")
-        row5col1.table(conv_by_browser)
-        
-        #9-Conversions by device
-        row5col2.header("Conversions by Device")
-        row5col2.table(conv_by_device)
-        
-        #Row 6
-        
-        #10
-        st.header("Visits by country (Top 10)")
-        st.table(country_visits)
-        
-        #11
+        if visits_full is not None:
+            st.title("Visits")
+            
+            #Row 4
+            row4col1, row4col2 = st.columns(2)
+            
+            #6-Visits over time
+            row4col1.header("Visits Timeline")
+            row4col1.line_chart(data=timeline3, width = 500, height =300)
+            
+            #7
+            row4col2.header("Conversions Timeline")
+            row4col2.line_chart(data=timeline4, width = 500, height =300)
+            
+            #Row 5
+            row5col1, row5col2 = st.columns(2)
+            
+            #8-Conversions by browser
+            row5col1.header("Conversions by Browser")
+            row5col1.table(conv_by_browser)
+            
+            #9-Conversions by device
+            row5col2.header("Conversions by Device")
+            row5col2.table(conv_by_device)
+            
+            #Row 6
+            
+            #10
+            st.header("Visits by country (Top 10)")
+            st.table(country_visits)
+            
+            #11
         
         
         
@@ -1046,4 +1156,4 @@ else:
         if st.checkbox('Show filtered data'):
             st.dataframe(sorted_data)
     else:
-        st.title("Please upload all the required files to proceed")
+        st.title("Please upload files to proceed")
