@@ -21,12 +21,13 @@ Created on Sun Sep 12 20:07:05 2021
 #PACKAGE IMPORT
 import pandas as pd
 from geopy.geocoders import Nominatim
-import streamlit as st
 import numpy as np
 from deep_translator import GoogleTranslator
 from collections import Counter
 import requests
 import io
+import streamlit as st
+
 
 #LAYOUT
 st.set_page_config(layout="wide")
