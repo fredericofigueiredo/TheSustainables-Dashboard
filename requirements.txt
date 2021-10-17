@@ -5,4 +5,3 @@ numpy==1.19.2
 deep_translator
 xlrd==1.2.0
 requests==2.26.0
-io
